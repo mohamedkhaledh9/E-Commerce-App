@@ -1,0 +1,20 @@
+import 'package:flutter/cupertino.dart';
+
+//const kMainColor = Color(0xFFFFC12F);
+const kMainColor = Color(0xFFBFEB91);
+const kProductName = 'ProductName';
+const kProductPrice = 'ProductPrice';
+const kProductDescription = 'ProductDescription';
+const kProductCategory = 'ProductCategory';
+const kProductLocation = 'ProductLocatin';
+const kProductCollection = 'Products';
+const kJackets = 'jackets';
+const kBags = 'bags';
+const kTShirts = 'tshirts';
+const kShoes = 'shoes';
+const kOrderDetails = 'orderDetails';
+const kOrders = 'orders';
+const kProductQuantity = 'ProductQuantity';
+const kAddress = 'UserAdress';
+const kTotalPrice = 'totalPrice';
+const kKeepMeLogedIn = 'keepMeLoggedIn';
