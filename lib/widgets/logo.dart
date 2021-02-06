@@ -1,3 +1,4 @@
+import 'package:chatapp/constans.dart';
 import 'package:flutter/material.dart';
 
 class AppLogo extends StatelessWidget {
@@ -10,13 +11,21 @@ class AppLogo extends StatelessWidget {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Image(
-              image: AssetImage('images/icons/shop.png'),
+            Container(
+              height: 80,
+              width: 170,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image(
+                  fit: BoxFit.fill,
+                  image: AssetImage('images/icons/cart.gif'),
+                ),
+              ),
             ),
             Positioned(
               bottom: 0,
               child: Text(
-                "Shop",
+                "",
                 style: TextStyle(
                     fontFamily: 'myFont',
                     fontSize: 25,

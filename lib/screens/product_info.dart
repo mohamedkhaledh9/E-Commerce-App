@@ -2,6 +2,8 @@ import 'package:chatapp/constans.dart';
 import 'package:chatapp/models/product_data.dart';
 import 'package:chatapp/provider/provider_cart_items.dart';
 import 'package:chatapp/screens/cart_items.dart';
+import 'package:chatapp/services/store.dart';
+import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +16,7 @@ class ProductInfo extends StatefulWidget {
 
 class _ProductInfoState extends State<ProductInfo> {
   int _quaintity = 1;
+  bool isFavorite ;
 
   void increaseQuantity() {
     setState(() {
@@ -32,158 +35,343 @@ class _ProductInfoState extends State<ProductInfo> {
   @override
   Widget build(BuildContext context) {
     Product product = ModalRoute.of(context).settings.arguments;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Image(
-              fit: BoxFit.fill,
-              image: AssetImage(product.pLocation),
-            ),
-          ),
-          Material(
-            child: Container(
-              height: MediaQuery.of(context).size.height * .1,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(30, 40, 30, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.arrow_back_ios_outlined),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, CartItems.id);
-                      },
+      backgroundColor: kMainColor,
+      appBar: AppBar(
+        backgroundColor: kMainColor,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: CircleAvatar(
+                      radius: 23,
+                      backgroundColor: kMainColor,
                       child: Icon(
-                        Icons.shopping_cart,
-                        color: Colors.black87,
+                        Icons.arrow_back_ios,
+                        size: 30,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        size: 35,
+                        color: kMainColor,
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, CartItems.id);
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
+              SizedBox(
+                height: 5,
+              ),
+              Divider(
+                height: 3,
+                thickness: 3,
+                color: kMainColor,
+              ),
+            ],
           ),
-          ButtonTheme(
-            minWidth: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * .1,
-            child: Positioned(
-              bottom: 0,
-              child: Column(
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: size.height,
+              child: Stack(
                 children: [
-                  Opacity(
-                    opacity: .5,
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product.pName,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              '\$${product.pPrice}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
+                  Container(
+                    //height: 500,
+                    margin: EdgeInsets.only(top: size.height * .4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(30),
+                        topLeft: Radius.circular(30),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 80,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Container(
+                            child: Text(
                               product.pDescription,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 15),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black26,
+                                  fontSize: 22),
                             ),
-                            SizedBox(
-                              height: 10,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    height: 32,
+                                    width: 40,
+                                    child: OutlineButton(
+                                      padding: EdgeInsets.zero,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13)),
+                                      onPressed: decreaseQuantity,
+                                      child: Icon(Icons.remove),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      _quaintity.toString(),
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 32,
+                                    width: 40,
+                                    child: OutlineButton(
+                                      padding: EdgeInsets.zero,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(13)),
+                                      onPressed: increaseQuantity,
+                                      child: Icon(Icons.add),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  iconSize: 40,
-                                  onPressed: () {
-                                    increaseQuantity();
-                                  },
-                                  icon: Icon(Icons.add),
-                                  color: kMainColor,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.favorite,
+                                  color: product.isFavorite == true
+                                      ? Colors.red
+                                      : Colors.blueGrey,
+                                  size: 30,
                                 ),
-                                Text(
-                                  _quaintity.toString(),
-                                  style: TextStyle(fontSize: 40),
-                                ),
-                                IconButton(
-                                    color: kMainColor,
-                                    iconSize: 40,
-                                    icon: Icon(Icons.remove),
-                                    onPressed: () {
-                                      decreaseQuantity();
-                                    })
-                              ],
+                                onPressed: () {
+                                  Store _store = Store();
+                                  Map<String, bool> isFavoriteValue = {
+                                    kIsFavorite: true,
+                                  };
+                                  Map<String, bool> isNotFavorite = {
+                                    kIsFavorite: false,
+                                  };
+                                  if (product.isFavorite != true) {
+                                    _store.updateFavoriteState(
+                                        product.pId, isFavoriteValue);
+                                  } else {
+                                    _store.updateFavoriteState(
+                                        product.pId, isNotFavorite);
+                                  }
+                                },
+
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      color: Colors.white,
-                      height: MediaQuery.of(context).size.height * .2,
-                      width: MediaQuery.of(context).size.width,
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                child: Stack(
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor: kMainColor,
+                                      radius: 40,
+                                      child: Icon(
+                                        Icons.shopping_cart,
+                                        size: 35,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 30,
+                                        bottom: 0,
+                                        left: 25,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          child: Icon(
+                                            Icons.add,
+                                            size: 20,
+                                            color: Colors.black,
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                                height: 50,
+                                width: 50,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: kMainColor,
+                                      borderRadius: BorderRadius.circular(20)),
+                                  height: 50,
+                                  child: Builder(
+                                    builder: (context) => FlatButton(
+                                      onPressed: () {
+                                        ProviderCartItem _addItems =
+                                            Provider.of<ProviderCartItem>(
+                                                context,
+                                                listen: false);
+                                        product.pQuantity = _quaintity;
+                                        bool exist = false;
+                                        var productsInCart = _addItems.products;
+                                        for (var productsInCart
+                                            in productsInCart) {
+                                          if (productsInCart.pLocation ==
+                                              product.pLocation) {
+                                            exist = true;
+                                          }
+                                        }
+                                        if (exist) {
+                                          Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  "You Added This Item Befor"),
+                                            ),
+                                          );
+                                        } else {
+                                          _addItems.addItems(product);
+                                          Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text("Item Added"),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Text(
+                                        "Add To Card",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  Builder(
-                    builder: (context) => RaisedButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
-                      onPressed: () {
-                        ProviderCartItem _addItems =
-                            Provider.of<ProviderCartItem>(context,
-                                listen: false);
-                        product.pQuantity = _quaintity;
-                        bool exist = false;
-                        var productsInCart = _addItems.products;
-                        for (var productsInCart in productsInCart) {
-                          if (productsInCart.pLocation == product.pLocation) {
-                            exist = true;
-                          }
-                        }
-                        if (exist) {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("You Added This Item Befor"),
-                            ),
-                          );
-                        } else {
-                          _addItems.addItems(product);
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Item Added"),
-                            ),
-                          );
-                        }
-                      },
-                      child: Text("Add To My Cart"),
-                      color: kMainColor,
+                  Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Product Type :\t" + product.pCategory,
+                          style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.zero,
+                          child: Text(
+                            product.pName,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 35,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(text: "Price \n"),
+                                    TextSpan(
+                                        text: "\t" + product.pPrice + "\$",
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold)),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(50),
+                                  child: Container(
+                                    height: size.height * .3,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black26,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.asset(
+                                        product.pLocation,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

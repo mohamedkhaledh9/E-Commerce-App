@@ -18,16 +18,45 @@ class _ManageProductState extends State<ManageProduct> {
   final _store = Store();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    getProducts();
-  }
-
-  void getProducts() {}
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white70),
+                height: 40,
+                width: 50,
+                child: Icon(Icons.arrow_back),
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Expanded(
+              child: Container(
+                width: 250,
+                height: 40,
+                child: Center(child: Text(" Manage All Products")),
+                decoration: BoxDecoration(
+                  color: Colors.white70,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: kMainColor,
+      ),
+      backgroundColor: kMainColor,
       body: StreamBuilder<QuerySnapshot>(
         stream: _store.loadProduct(),
         builder: (context, snapshot) {
@@ -58,6 +87,7 @@ class _ManageProductState extends State<ManageProduct> {
                 ),
                 child: GestureDetector(
                   onTapUp: (dimentions) {
+                    print(prducts[index].pId);
                     double dx = dimentions.globalPosition.dx;
                     double dy = dimentions.globalPosition.dy;
                     double dx2 = MediaQuery.of(context).size.width - dx;
@@ -86,35 +116,51 @@ class _ManageProductState extends State<ManageProduct> {
                   child: Stack(
                     children: <Widget>[
                       Positioned.fill(
-                        child: Image(
-                          fit: BoxFit.fill,
-                          image: AssetImage(prducts[index].pLocation),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image(
+                            fit: BoxFit.fill,
+                            image: AssetImage(prducts[index].pLocation),
+                          ),
                         ),
                       ),
                       Positioned(
                         bottom: 0,
-                        child: Opacity(
-                          opacity: .6,
-                          child: Container(
-                            height: 50,
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  prducts[index].pName,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
+                        left: 0,
+                        right: 0,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                          child: Opacity(
+                            opacity: .6,
+                            child: Container(
+                              height: 60,
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      prducts[index].pName,
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        '\$ ${prducts[index].pPrice}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Text(
-                                  '\$ ${prducts[index].pPrice}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),

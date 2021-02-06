@@ -32,151 +32,146 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: kMainColor,
       body: ModalProgressHUD(
         inAsyncCall: Provider.of<ModelHud>(context).isLoading,
         child: Form(
           key: _globalKey,
-          child: ListView(
+          child: Stack(
             children: [
-              AppLogo(),
-              SizedBox(
-                height: height * .1,
+              Image(
+                image: AssetImage("images/appimages/shop6.jpg"),
+                fit: BoxFit.fill,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
               ),
-              CustomFormField(
-                onClic: (value) {
-                  _email = value;
-                },
-                hint: "Enter your email",
-                icon: Icons.email,
-              ),
-              SizedBox(
-                height: height * .04,
-              ),
-              CustomFormField(
-                onClic: (value) {
-                  _password = value;
-                },
-                hint: "Enter your password",
-                icon: Icons.lock,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(28, 10, .0, 0),
-                child: Row(
-                  children: [
-                    Theme(
-                      data: ThemeData(unselectedWidgetColor: Colors.white),
-                      child: Checkbox(
-                        activeColor: kMainColor,
-                        value: keepMeLoggedIn,
-                        onChanged: (value) {
-                          setState(() {
-                            keepMeLoggedIn = value;
-                          });
+              ListView(
+                children: [
+                  AppLogo(),
+                  SizedBox(
+                    height: height * .08,
+                  ),
+                  CustomFormField(
+                    onClic: (value) {
+                      _email = value;
+                    },
+                    hint: "Enter your email",
+                    icon: Icons.email,
+                  ),
+                  SizedBox(
+                    height: height * .04,
+                  ),
+                  CustomFormField(
+                    onClic: (value) {
+                      _password = value;
+                    },
+                    hint: "Enter your password",
+                    icon: Icons.lock,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(28, 10, .0, 0),
+                    child: Row(
+                      children: [
+                        Theme(
+                          data: ThemeData(unselectedWidgetColor: Colors.white),
+                          child: Checkbox(
+                            activeColor: kMainColor,
+                            value: keepMeLoggedIn,
+                            onChanged: (value) {
+                              setState(() {
+                                keepMeLoggedIn = value;
+                              });
+                            },
+                          ),
+                        ),
+                        Text(
+                          "Remember Me",
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 120),
+                    child: Builder(
+                      builder: (context) => FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        onPressed: () {
+                          if (keepMeLoggedIn == true) {
+                            keepMeLoggedInMethod();
+                          }
+                          validateUser(context);
                         },
+                        color: Colors.black,
+                        child: Text(
+                          "login",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
-                    Text(
-                      "Remember Me",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 120),
-                child: Builder(
-                  builder: (context) => FlatButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                      if (keepMeLoggedIn == true) {
-                        keepMeLoggedInMethod();
-                      }
-                      validateUser(context);
-                    },
-                    color: Colors.black,
-                    child: Text(
-                      "login",
-                      style: TextStyle(color: Colors.white),
-                    ),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: height * .05,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Dont have an account ?  ',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
+                  SizedBox(
+                    height: height * .05,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, SignUp.id);
-                    },
-                    child: Text(
-                      ' Sign Up ',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Dont have an account ?  ',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, SignUp.id);
+                        },
+                        child: Text(
+                          ' Sign Up ',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(25.0),
+                    child: Row(
+                      children: [
+                        Theme(
+                          data: ThemeData(unselectedWidgetColor: Colors.white),
+                          child: Checkbox(
+                              activeColor: kMainColor,
+                              value: Provider.of<IsAsmin>(context).isAdmin,
+                              onChanged: (value) {
+                                if (Provider.of<IsAsmin>(context, listen: false)
+                                        .isAdmin ==
+                                    true) {
+                                  Provider.of<IsAsmin>(context, listen: false)
+                                      .isAdminValue(false);
+                                } else {
+                                  Provider.of<IsAsmin>(context, listen: false)
+                                      .isAdminValue(true);
+                                }
+                              }),
+                        ),
+                        Text(
+                          "Sign As Admin",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Provider.of<IsAsmin>(context, listen: false)
-                              .isAdminValue(true);
-                        },
-                        child: Text(
-                          'I\'am an admin',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Provider.of<IsAsmin>(context).isAdmin
-                                ? kMainColor
-                                : Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Provider.of<IsAsmin>(context, listen: false)
-                              .isAdminValue(false);
-                        },
-                        child: Text(
-                          'I\'am a user',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Provider.of<IsAsmin>(context).isAdmin
-                                ? Colors.white
-                                : kMainColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ),
             ],
           ),
@@ -193,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (Provider.of<IsAsmin>(context, listen: false).isAdmin) {
         if (_password == adminPassword) {
           try {
-            await _user.signIn(_email, _password);
+            await _user.signIn(_email.trim(), _password.trim());
             Navigator.pushNamed(context, AdminPage.id);
           } catch (e) {
             progressmode.changeIsLoadind(false);

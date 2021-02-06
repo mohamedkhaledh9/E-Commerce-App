@@ -12,6 +12,7 @@ class Store {
       kProductDescription: product.pDescription,
       kProductCategory: product.pCategory,
       kProductLocation: product.pLocation,
+      kIsFavorite: product.isFavorite,
     });
   }
 
@@ -36,7 +37,21 @@ class Store {
   }
 
   deletOrder(orderId) {
-    _fireStore.collection(kOrderDetails).doc(orderId).delete();
+    _fireStore
+        .collection("orders")
+        .doc(orderId)
+        .collection("orderDetails")
+        .get()
+        .then((value) {
+      for (QueryDocumentSnapshot snapshot in value.docs) {
+        snapshot.reference.delete();
+      }
+    });
+    var orderDetails = _fireStore.collection("orders").doc(orderId);
+    var removeDetails = orderDetails.update({
+      "UserAdress": FieldValue.delete(),
+      "totalPrice": FieldValue.delete(),
+    });
   }
 
   editProduct(data, productId) {
@@ -55,4 +70,15 @@ class Store {
       });
     }
   }
+
+  updateFavoriteState(String productID, isFavoriteValue) {
+    _fireStore
+        .collection(kProductCollection)
+        .doc(productID)
+        .update(isFavoriteValue);
+  }
+
+
+
+
 }

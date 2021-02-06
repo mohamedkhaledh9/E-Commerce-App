@@ -6,13 +6,16 @@ class Product {
   String pLocation;
   String pId;
   int pQuantity;
+  bool isFavorite;
 
-  Product(
-      {this.pQuantity,
-      this.pId,
-      this.pName,
-      this.pPrice,
-      this.pDescription,
-      this.pCategory,
-      this.pLocation});
+  Product({
+    this.pQuantity,
+    this.pId,
+    this.pName,
+    this.pPrice,
+    this.pDescription,
+    this.pCategory,
+    this.pLocation,
+    this.isFavorite,
+  });
 }

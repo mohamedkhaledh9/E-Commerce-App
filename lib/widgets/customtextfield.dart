@@ -15,6 +15,8 @@ class CustomFormField extends StatelessWidget {
         return " Empty Email ";
       case "Enter your password":
         return " Empty Password ";
+      case "Enter your phone number":
+        return "Empty Phone Number";
     }
   }
 
@@ -37,23 +39,24 @@ class CustomFormField extends StatelessWidget {
             color: kMainColor,
           ),
           hintText: hint,
+          hintStyle: TextStyle(color: Colors.blueGrey),
           filled: true,
           fillColor: Colors.white70,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              20,
+              5,
             ),
             borderSide: BorderSide(color: Colors.white),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              20,
+              5,
             ),
             borderSide: BorderSide(color: Colors.white),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(
-              20,
+              5,
             ),
             borderSide: BorderSide(color: Colors.white),
           ),

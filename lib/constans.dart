@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 //const kMainColor = Color(0xFFFFC12F);
-const kMainColor = Color(0xFFBFEB91);
+const kMainColor = Color(0xFF9C27B0);
 const kProductName = 'ProductName';
 const kProductPrice = 'ProductPrice';
 const kProductDescription = 'ProductDescription';
@@ -18,3 +18,6 @@ const kProductQuantity = 'ProductQuantity';
 const kAddress = 'UserAdress';
 const kTotalPrice = 'totalPrice';
 const kKeepMeLogedIn = 'keepMeLoggedIn';
+const kOrderLocationPoint="orderlocationPoint";
+const kFavoriteList="favoriteList";
+const kIsFavorite="isFavorite";
